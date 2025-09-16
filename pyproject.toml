@@ -1,0 +1,49 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "sentiment_analysis"
+version = "0.0.1"
+description = "This project is going to train a CNN to recognise the emotion of the speaker saying a sentence in an audio."
+authors = [
+  { name = "Taed2-G11-Sentiment_Analysis" },
+]
+
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    
+]
+dependencies = [
+    "loguru",
+    "mkdocs",
+    "pandas>=2.3.2",
+    "pip",
+    "python-dotenv",
+    "ruff",
+    "tqdm",
+    "typer",
+]
+requires-python = "~=3.11.0"
+
+
+[tool.ruff]
+line-length = 99
+src = ["sentiment_analysis"]
+include = ["pyproject.toml", "sentiment_analysis/**/*.py"]
+
+[tool.ruff.lint]
+extend-select = ["I"]  # Add import sorting
+
+[tool.ruff.lint.isort]
+known-first-party = ["sentiment_analysis"]
+force-sort-within-sections = true
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "pylint>=3.3.8",
+    "pytest>=8.4.2",
+]
+
