@@ -1,0 +1,4 @@
+[core]
+    remote = origin
+['remote "origin"']
+    url = https://dagshub.com/arnau.biosca.perez/taed2-sentiment_analysis.git
