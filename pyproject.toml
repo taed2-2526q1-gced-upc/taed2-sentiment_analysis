@@ -44,6 +44,9 @@ force-sort-within-sections = true
 members = [
     ".",
 ]
+[tool.pytest.ini_options]
+pythonpath = "."
+testpaths = "tests"
 
 [tool.uv.sources]
 sentiment-analysis = { workspace = true }
