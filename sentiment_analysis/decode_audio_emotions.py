@@ -170,11 +170,15 @@ def analyze_dataset(df):
 def main():
     # Path to your raw data
     audio_dir = "data/raw/Audio_Speech_Actors"
+    print('aaaaaaaaaaaaaaaaaaaaaaaaaa')
+    print(os.getcwd())
+    print('aaaaaaaaaaaaaaaaaaaaaaaaaa')
 
     print("Creating audio -> emotion mapping...")
 
     # Create full mapping
     audio_mapping = create_audio_emotion_mapping(audio_dir)
+    print(audio_mapping)
 
     # Save the results
     df = save_mappings(audio_mapping)
