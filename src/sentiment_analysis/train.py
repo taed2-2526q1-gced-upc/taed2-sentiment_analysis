@@ -14,7 +14,7 @@ from tqdm import tqdm
 # ================================
 # CONFIG
 # ================================
-BASE_DIR = Path(__file__).resolve().parents[1]
+BASE_DIR = Path(__file__).resolve().parents[2]  
 DATA_PATH = BASE_DIR / "data" / "processed" / "audio_features_multichannel.npz"
 MODEL_PATH = BASE_DIR / "models" / "cnn_audio_emotion.pth"
 EPOCHS = 30
@@ -75,14 +75,19 @@ class AudioCNN(nn.Module):
 # TRAINING LOOP
 # ================================
 def train_model(model, train_loader, val_loader, criterion, optimizer, epochs=EPOCHS):
+    # Aseguramos que modelo y datos están en el mismo dispositivo
+    device = next(model.parameters()).device
     model.train()
+
     for epoch in range(epochs):
         total_loss = 0
         correct = 0
         total = 0
         loop = tqdm(train_loader, leave=False)
+
         for X_batch, y_batch in loop:
-            X_batch, y_batch = X_batch.to(DEVICE), y_batch.to(DEVICE)
+            # Mover batch al mismo dispositivo que el modelo
+            X_batch, y_batch = X_batch.to(device), y_batch.to(device)
 
             optimizer.zero_grad()
             outputs = model(X_batch)
@@ -104,11 +109,13 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, epochs=EP
 
 
 def evaluate_model(model, loader):
+    # Detectamos el dispositivo actual del modelo
+    device = next(model.parameters()).device
     model.eval()
     correct, total = 0, 0
     with torch.no_grad():
         for X_batch, y_batch in loader:
-            X_batch, y_batch = X_batch.to(DEVICE), y_batch.to(DEVICE)
+            X_batch, y_batch = X_batch.to(device), y_batch.to(device)
             outputs = model(X_batch)
             preds = outputs.argmax(dim=1)
             correct += (preds == y_batch).sum().item()
