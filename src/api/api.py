@@ -46,29 +46,60 @@ async def load_model():
 
 def preprocess_audio(audio_path: str) -> np.ndarray:
     """
-    Preprocess audio file for model input
-    
-    Args:
-        audio_path: Path to the audio file
-    
-    Returns:
-        Preprocessed audio features
+    Preprocess audio file for model input (4-channel features)
     """
     try:
-        # Charger l'audio
-        audio, sr = librosa.load(audio_path, sr=16000)  # Ajustez le sample rate
-        
-        # Extraire les features (MFCC, mel-spectrogram, etc.)
-        # Adaptez selon ce que votre modèle attend
-        mfcc = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=40)
-        
-        # Normalisation ou autres transformations
-        mfcc = (mfcc - np.mean(mfcc)) / np.std(mfcc)
-        
-        return mfcc
+        y, sr = librosa.load(audio_path, sr=22050)
+        max_len = int(sr * 3.0)
+        if len(y) > max_len:
+            y = y[:max_len]
+        else:
+            y = np.pad(y, (0, max_len - len(y)))
+
+        n_freq = 40
+
+        # --- MFCC ---
+        mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=n_freq)
+
+        # --- Mel spectrogram ---
+        mel = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128)
+        mel_db = librosa.power_to_db(mel, ref=np.max)
+
+        # --- Chroma ---
+        chroma = librosa.feature.chroma_stft(y=y, sr=sr)
+
+        # --- RMSE ---
+        rmse = librosa.feature.rms(y=y)
+
+        # Igualamos el número de frames
+        min_frames = min(mfcc.shape[1], mel_db.shape[1], chroma.shape[1], rmse.shape[1])
+        mfcc, mel_db, chroma, rmse = mfcc[:, :min_frames], mel_db[:, :min_frames], chroma[:, :min_frames], rmse[:, :min_frames]
+
+        # Recortamos/pad
+        def pad_or_trim(mat, target_rows=n_freq):
+            if mat.shape[0] > target_rows:
+                return mat[:target_rows, :]
+            elif mat.shape[0] < target_rows:
+                pad = np.zeros((target_rows - mat.shape[0], mat.shape[1]))
+                return np.vstack([mat, pad])
+            return mat
+
+        mel_db = pad_or_trim(mel_db)
+        chroma = pad_or_trim(chroma)
+        rmse = np.repeat(pad_or_trim(rmse, 1), n_freq, axis=0)
+
+        # Normalizamos
+        def norm(x): return (x - np.mean(x)) / (np.std(x) + 1e-6)
+        mfcc, mel_db, chroma, rmse = map(norm, [mfcc, mel_db, chroma, rmse])
+
+        # Apilamos los 4 canales
+        features = np.stack([mfcc, mel_db, chroma, rmse], axis=0)
+
+        return features
     except Exception as e:
         logger.error(f"Error preprocessing audio: {e}")
         raise HTTPException(status_code=400, detail=f"Failed to process audio: {str(e)}")
+
 
 @app.get("/")
 async def root():
