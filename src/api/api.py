@@ -4,11 +4,11 @@ import torch
 import librosa
 import numpy as np
 from pathlib import Path
-
+from src.sentiment_analysis.train import AudioCNN  # importa tu clase del modelo
 from src.api.schemas import PredictRequest, PredictResponse, EmotionPrediction
 
 # Configuration
-MODEL_PATH = "models/emotion_model.pth"  # Ajustez selon votre chemin
+MODEL_PATH = "models/cnn_audio_emotion.pth"  # Ajustez selon votre chemin
 EMOTIONS = ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"]  # Vos classes
 
 app = FastAPI(
@@ -20,15 +20,26 @@ app = FastAPI(
 # Charger le modèle au démarrage
 model = None
 
+
 @app.on_event("startup")
 async def load_model():
     """Load the emotion recognition model on startup"""
     global model
     try:
         logger.info(f"Loading model from {MODEL_PATH}")
-        model = torch.load(MODEL_PATH, map_location=torch.device('cpu'))
+
+        # 1️⃣ Crea una instancia del modelo con el número correcto de clases
+        num_classes = 8  # ajusta si tu modelo tiene otro número de emociones
+        model = AudioCNN(num_classes=num_classes)
+
+        # 2️⃣ Carga los pesos
+        state_dict = torch.load(MODEL_PATH, map_location=torch.device('cpu'))
+        model.load_state_dict(state_dict)
+
+        # 3️⃣ Ponlo en modo evaluación
         model.eval()
-        logger.info("Model loaded successfully")
+
+        logger.info("Model loaded successfully ✅")
     except Exception as e:
         logger.error(f"Failed to load model: {e}")
         raise
