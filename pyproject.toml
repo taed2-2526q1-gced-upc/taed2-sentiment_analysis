@@ -17,6 +17,7 @@ classifiers = [
 ]
 dependencies = [
     "codecarbon>=3.0.5",
+    "dvc>=3.63.0",
     "librosa>=0.11.0",
     "loguru",
     "mkdocs",
