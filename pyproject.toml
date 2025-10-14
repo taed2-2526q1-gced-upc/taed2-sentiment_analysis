@@ -20,10 +20,12 @@ dependencies = [
     "librosa>=0.11.0",
     "loguru",
     "mkdocs",
+    "numpy>=2.3.3",
     "pandas>=2.3.2",
     "pip",
     "python-dotenv",
     "ruff",
+    "torch>=2.8.0",
     "tqdm",
     "typer",
 ]

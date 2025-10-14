@@ -35,10 +35,7 @@ class AudioEmotionDataset(Dataset):
         return len(self.X)
 
     def __getitem__(self, idx):
-        # Añadimos dimensión de canal si hace falta
         x = self.X[idx]
-        if x.ndim == 3:
-            x = x.unsqueeze(0)
         return x, self.y[idx]
 
 

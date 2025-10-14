@@ -108,7 +108,7 @@ def create_simple_emotion_dict(audio_mapping):
     """
     return {path: data['emotion'] for path, data in audio_mapping.items()}
 
-def save_mappings(audio_mapping, output_dir='data/processed'):
+def save_mappings(audio_mapping, output_dir='../data/processed'):
     """
     Save the mappings to different file formats.
 
@@ -169,10 +169,7 @@ def analyze_dataset(df):
 # Main function
 def main():
     # Path to your raw data
-    audio_dir = "data/raw/Audio_Speech_Actors"
-    print('aaaaaaaaaaaaaaaaaaaaaaaaaa')
-    print(os.getcwd())
-    print('aaaaaaaaaaaaaaaaaaaaaaaaaa')
+    audio_dir = "../data/raw/Audio_Speech_Actors"
 
     print("Creating audio -> emotion mapping...")
 
