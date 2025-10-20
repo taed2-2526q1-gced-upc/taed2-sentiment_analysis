@@ -126,6 +126,8 @@ def evaluate_model(model, loader):
 # ================================
 # MAIN
 # ================================
+from codecarbon import EmissionsTracker
+
 def main():
     print("📂 Cargando dataset...")
     data = np.load(DATA_PATH, allow_pickle=True)
@@ -145,17 +147,33 @@ def main():
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=LR)
 
+    # =========================================================
+    # 🟢 INICIO DEL TRACKER DE CODECARBON
+    # =========================================================
+    tracker = EmissionsTracker(
+        project_name="EmotionRecognitionTraining",
+        output_dir=BASE_DIR / "reports",
+        measure_power_secs=5,  # frecuencia de medición
+        log_level="info",
+        save_to_file=True
+    )
+    tracker.start()
+
     print("🚀 Entrenando modelo...")
     train_model(model, train_loader, val_loader, criterion, optimizer)
 
-    print("🧪 Evaluando en test...")
+    emissions = tracker.stop()
+    print(f"🌱 Emisiones totales del entrenamiento: {emissions:.6f} kgCO₂eq")
+
+    # =========================================================
+    # 🧪 Evaluación final
+    # =========================================================
     test_acc = evaluate_model(model, test_loader)
     print(f"✅ Accuracy en test: {test_acc:.3f}")
 
     MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
     torch.save(model.state_dict(), MODEL_PATH)
     print(f"💾 Modelo guardado en {MODEL_PATH}")
-
 
 if __name__ == "__main__":
     main()
