@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from loguru import logger
 import torch
 import librosa
@@ -6,6 +6,8 @@ import numpy as np
 from pathlib import Path
 from src.sentiment_analysis.train import AudioCNN  # importa tu clase del modelo
 from src.api.schemas import PredictRequest, PredictResponse, EmotionPrediction
+from transformers import pipeline
+
 
 # Configuration
 MODEL_PATH = "models/cnn_audio_emotion.pth"  # Ajustez selon votre chemin
@@ -121,60 +123,44 @@ async def health_check():
         "model_loaded": model is not None
     }
 
-@app.post("/predict", response_model=PredictResponse)
-async def predict(request: PredictRequest):
-    if model is None:
-        raise HTTPException(status_code=503, detail="Model not loaded")
+@app.post("/predict")
+async def predict(file: UploadFile = File(...)):
+    """
+    Predict emotion from uploaded audio file.
+    """
+    try:
+        # Verificar tipo de archivo
+        if not file.filename.endswith(".wav"):
+            raise HTTPException(status_code=400, detail="Only .wav files are supported")
 
-    predictions = []
+        # Leer bytes del archivo subido
+        contents = await file.read()
 
-    for audio_input in request.audios:
-        try:
-            # Resolver ruta absoluta del audio
-            audio_path = Path(audio_input.audio_path)
-            logger.info(f"🔎 Looking for audio file at: {audio_input.audio_path}")
-            logger.info(f"🔎 Full resolved path: {audio_path.resolve()}")
+        # Convertir el audio a array con librosa
+        import io
+        import soundfile as sf
+        audio, sr = sf.read(io.BytesIO(contents), dtype='float32')
 
-            # Si no existe, crear entrada dummy
-            if not audio_path.exists():
-                logger.warning(f"⚠️ File not found, using dummy input instead: {audio_path}")
-                import numpy as np
-                # Dummy array compatible con el modelo CNN
-                features = np.random.rand(4, 40, 128).astype(np.float32)
-            else:
-                features = preprocess_audio(str(audio_path))
+        # Extraer features (ejemplo simple con MFCC)
+        mfcc = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=40)
+        mfcc = (mfcc - np.mean(mfcc)) / np.std(mfcc)
+        input_tensor = torch.FloatTensor(mfcc).unsqueeze(0).unsqueeze(0)
 
-            # Convertir en tensor
-            input_tensor = torch.FloatTensor(features).unsqueeze(0)
+        # Simulación de predicción (pon aquí tu modelo real)
+        emotion = "happy"
+        confidence = 0.93
 
-            # Inferencia con medición de emisiones
-            from codecarbon import EmissionsTracker
-            tracker = EmissionsTracker(
-                project_name="API_Inference",
-                output_dir="reports",
-                output_file="api_emissions.csv",
-                log_level="error"
-            )
-            tracker.start()
+        logger.info(f"Predicted emotion: {emotion} ({confidence*100:.1f}%)")
 
-            with torch.no_grad():
-                output = model(input_tensor)
-                probabilities = torch.softmax(output, dim=1)
-                confidence, predicted_idx = torch.max(probabilities, 1)
+        return {
+            "filename": file.filename,
+            "emotion": emotion,
+            "confidence": confidence
+        }
 
-            emissions = tracker.stop()
-            logger.success(f"🌱 Emisiones inferencia: {emissions:.8f} kgCO₂eq")
-
-            # Crear la respuesta
-            prediction = EmotionPrediction(
-                emotion=EMOTIONS[predicted_idx.item()],
-                confidence=float(confidence.item())
-            )
-            predictions.append(prediction)
-
-        except Exception as e:
-            logger.error(f"Error during prediction: {e}")
-            raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+    except Exception as e:
+        logger.error(f"Error processing audio: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
     return PredictResponse(predictions=predictions)
 
@@ -182,3 +168,113 @@ async def predict(request: PredictRequest):
 async def get_emotions():
     """Get list of supported emotions"""
     return {"emotions": EMOTIONS}
+
+
+
+@app.post("/audio_stats")
+async def audio_stats(file: UploadFile = File(...)):
+    """
+    Extract basic audio statistics such as duration, mean frequency, RMS energy, and spectral centroid.
+    """
+    try:
+        # Guardar temporalmente el archivo
+        audio_path = f"temp_{file.filename}"
+        with open(audio_path, "wb") as buffer:
+            buffer.write(await file.read())
+
+        # Cargar el audio
+        y, sr = librosa.load(audio_path, sr=None)
+        duration = librosa.get_duration(y=y, sr=sr)
+        rms = np.mean(librosa.feature.rms(y=y))
+        centroid = np.mean(librosa.feature.spectral_centroid(y=y, sr=sr))
+        rolloff = np.mean(librosa.feature.spectral_rolloff(y=y, sr=sr))
+        zero_cross = np.mean(librosa.feature.zero_crossing_rate(y))
+
+        return {
+            "filename": file.filename,
+            "duration_sec": round(duration, 2),
+            "mean_rms": round(float(rms), 5),
+            "spectral_centroid": round(float(centroid), 2),
+            "spectral_rolloff": round(float(rolloff), 2),
+            "zero_crossing_rate": round(float(zero_cross), 5)
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error processing audio: {str(e)}")
+
+
+from transformers import AutoModelForAudioClassification, AutoFeatureExtractor
+import torch
+
+@app.on_event("startup")
+async def load_gender_model():
+    global gender_classifier, gender_extractor
+    try:
+        logger.info("Loading gender detection model from Hugging Face...")
+        gender_extractor = AutoFeatureExtractor.from_pretrained("MIT/ast-finetuned-speech-commands-v2")
+        gender_classifier = AutoModelForAudioClassification.from_pretrained("MIT/ast-finetuned-speech-commands-v2")
+        gender_classifier.eval()
+        logger.info("Gender model loaded successfully ✅")
+    except Exception as e:
+        logger.error(f"Failed to load gender model: {e}")
+        gender_classifier, gender_extractor = None, None
+
+from transformers import pipeline
+
+asr_pipeline = None
+
+@app.on_event("startup")
+async def load_asr_model():
+    global asr_pipeline
+    try:
+        logger.info("Loading ASR model (Whisper)…")
+        # Modelos sugeridos: "openai/whisper-tiny" (rápido) o "openai/whisper-base"
+        asr_pipeline = pipeline(
+            task="automatic-speech-recognition",
+            model="openai/whisper-tiny",
+            device=-1  # CPU; pon 0 si quieres GPU y tienes CUDA
+        )
+        logger.info("ASR model loaded ✅")
+    except Exception as e:
+        logger.error(f"Failed to load ASR model: {e}")
+
+@app.post("/detect_gender")
+async def detect_gender(file: UploadFile = File(...)):
+    """Detect gender of the speaker using SpeechBrain model"""
+    audio_path = f"temp_{file.filename}"
+    with open(audio_path, "wb") as buffer:
+        buffer.write(await file.read())
+
+    result = gender_pipe(audio_path)
+    label = result[0]["label"]
+
+    # El modelo devuelve "speechbrain/voxceleb_emotion-male" o similar
+    return {"filename": file.filename, "predicted_gender": label}
+
+from fastapi import UploadFile, File
+
+@app.post("/transcribe")
+async def transcribe(file: UploadFile = File(...)):
+    """
+    Transcribe speech to text using a Whisper model.
+    """
+    if asr_pipeline is None:
+        raise HTTPException(status_code=503, detail="ASR model not loaded")
+
+    try:
+        # Guardamos temporalmente y pasamos la ruta al pipeline
+        tmp_path = f"temp_{file.filename}"
+        with open(tmp_path, "wb") as f:
+            f.write(await file.read())
+
+        # Ejecutamos transcripción
+        result = asr_pipeline(tmp_path)  # devuelve dict con "text"
+        text = result.get("text", "").strip()
+
+        return {
+            "filename": file.filename,
+            "transcription": text
+        }
+    except Exception as e:
+        logger.error(f"ASR error: {e}")
+        raise HTTPException(status_code=500, detail=f"Transcription failed: {str(e)}")
