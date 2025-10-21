@@ -7,6 +7,8 @@ from pathlib import Path
 from src.sentiment_analysis.train import AudioCNN  # importa tu clase del modelo
 from src.api.schemas import PredictRequest, PredictResponse, EmotionPrediction
 from transformers import pipeline
+import tempfile
+import soundfile as sf
 
 
 # Configuration
@@ -133,13 +135,13 @@ async def predict(file: UploadFile = File(...)):
         if not file.filename.endswith(".wav"):
             raise HTTPException(status_code=400, detail="Only .wav files are supported")
 
-        # Leer bytes del archivo subido
-        contents = await file.read()
+        # Guardar archivo temporalmente para compatibilidad total con librosa
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+            tmp.write(await file.read())
+            tmp_path = tmp.name
 
-        # Convertir el audio a array con librosa
-        import io
-        import soundfile as sf
-        audio, sr = sf.read(io.BytesIO(contents), dtype='float32')
+        # Cargar audio (más robusto)
+        audio, sr = librosa.load(tmp_path, sr=None)
 
         # Extraer features (ejemplo simple con MFCC)
         mfcc = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=40)
@@ -152,6 +154,9 @@ async def predict(file: UploadFile = File(...)):
 
         logger.info(f"Predicted emotion: {emotion} ({confidence*100:.1f}%)")
 
+        # Eliminar el archivo temporal
+        os.remove(tmp_path)
+
         return {
             "filename": file.filename,
             "emotion": emotion,
@@ -161,8 +166,6 @@ async def predict(file: UploadFile = File(...)):
     except Exception as e:
         logger.error(f"Error processing audio: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
-    return PredictResponse(predictions=predictions)
 
 @app.get("/emotions")
 async def get_emotions():
@@ -218,7 +221,7 @@ async def load_gender_model():
     except Exception as e:
         logger.error(f"Failed to load gender model: {e}")
         gender_classifier, gender_extractor = None, None
-
+    
 from transformers import pipeline
 
 asr_pipeline = None
