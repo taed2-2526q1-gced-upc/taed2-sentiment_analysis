@@ -9,6 +9,7 @@ from src.api.schemas import PredictRequest, PredictResponse, EmotionPrediction
 from transformers import pipeline
 import tempfile
 import soundfile as sf
+import os
 
 
 # Configuration
