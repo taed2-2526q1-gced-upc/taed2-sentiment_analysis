@@ -149,9 +149,13 @@ async def predict(file: UploadFile = File(...)):
         mfcc = (mfcc - np.mean(mfcc)) / np.std(mfcc)
         input_tensor = torch.FloatTensor(mfcc).unsqueeze(0).unsqueeze(0)
 
-        # Simulación de predicción (pon aquí tu modelo real)
-        emotion = "happy"
-        confidence = 0.93
+        # Posibilidades de emoción
+        emotions = ["happy", "sad", "angry", "neutral", "surprised", "fear", "disgust"]
+
+        # 4 simulaciones de predicción
+        for i in range(4):
+            emotion = random.choice(emotions)
+            confidence = round(random.uniform(0.70, 0.99), 2)
 
         logger.info(f"Predicted emotion: {emotion} ({confidence*100:.1f}%)")
 
