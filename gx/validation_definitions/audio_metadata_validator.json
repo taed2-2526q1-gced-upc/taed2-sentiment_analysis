@@ -1,0 +1,22 @@
+{
+  "data": {
+    "asset": {
+      "id": "9dcc3972-054c-498a-ad4d-4f20aca7d7e9",
+      "name": "metadata_csv"
+    },
+    "batch_definition": {
+      "id": "cd02110b-764a-47d0-a78b-a7397efd79c1",
+      "name": "full"
+    },
+    "datasource": {
+      "id": "5b241d97-3933-475b-924d-631251741809",
+      "name": "audio_metadata"
+    }
+  },
+  "id": "2d5f5057-0257-440b-a8d0-4f21c8f9c8a2",
+  "name": "audio_metadata_validator",
+  "suite": {
+    "id": "f0cde80b-e597-41e2-bb41-929e22fe6d67",
+    "name": "audio_metadata_validation"
+  }
+}
