@@ -1,0 +1,838 @@
+{
+  "expectations": [
+    {
+      "id": "c34bbd6b-d54d-4e0c-896e-f58a3e1b2764",
+      "kwargs": {
+        "max_value": 2000,
+        "min_value": 1200
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_table_row_count_to_be_between"
+    },
+    {
+      "id": "fac65f21-62bd-4ec0-8426-4b054cc7400f",
+      "kwargs": {
+        "column": "filename"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "fa2db5f1-fb26-438a-9d97-1a347f14955f",
+      "kwargs": {
+        "column": "filename"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "7da8a0ab-9968-4d0e-9c43-27722404d65d",
+      "kwargs": {
+        "column": "relative_path"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "9b395c5f-f159-45b2-9f48-e553b5aced6a",
+      "kwargs": {
+        "column": "relative_path"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "514c5b4a-881f-4704-a21f-dd8f111c62e0",
+      "kwargs": {
+        "column": "modality"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "8c5825d6-f5cd-44d6-b90b-0fbb19da79f4",
+      "kwargs": {
+        "column": "modality"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "17e0343d-badb-41f2-a514-4fa1838244b3",
+      "kwargs": {
+        "column": "vocal_channel"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "53acf903-999a-4650-b08d-a8465bb13188",
+      "kwargs": {
+        "column": "vocal_channel"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "0519787f-c6c6-43a6-9f7e-845476b3476d",
+      "kwargs": {
+        "column": "emotion"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "f016ed5c-5cc9-45ee-b03b-e8fce0a68afb",
+      "kwargs": {
+        "column": "emotion"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "b4a35786-a374-4a00-8c1e-088466cabfbb",
+      "kwargs": {
+        "column": "emotion_code"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "5ce4a3c9-9a35-4e10-92dc-894dfc02fdc8",
+      "kwargs": {
+        "column": "emotion_code"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "ed4d4797-a6da-4ceb-9108-a9f90bff6295",
+      "kwargs": {
+        "column": "intensity"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "3dd1ebd2-fe7e-48ea-9aff-90ac1b0b8728",
+      "kwargs": {
+        "column": "intensity"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "66c24db3-93d8-48de-89da-fa64d408f12b",
+      "kwargs": {
+        "column": "intensity_code"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "c77c01ec-8029-457d-a062-b127a414f74e",
+      "kwargs": {
+        "column": "intensity_code"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "b1dd57c1-6584-4282-afa4-62a73815b0e6",
+      "kwargs": {
+        "column": "statement"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "058e32fb-5bb0-4dd8-b040-9496ef54a114",
+      "kwargs": {
+        "column": "statement"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "a32f497a-47c6-4cf2-afd9-8e7940e3254c",
+      "kwargs": {
+        "column": "statement_code"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "435458e5-7daf-4e25-89d3-e49216f19e6b",
+      "kwargs": {
+        "column": "statement_code"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "a467f3c3-6c37-40d0-be57-155cb1eca5fe",
+      "kwargs": {
+        "column": "repetition"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "378fa58c-615f-4ff3-a1f7-c8049f0f2c32",
+      "kwargs": {
+        "column": "repetition"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "1c4c3fc1-dc16-4aa5-9b04-ad2f9ab104e0",
+      "kwargs": {
+        "column": "actor"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "83f7e23f-35cd-459f-bb69-e568313f16b4",
+      "kwargs": {
+        "column": "actor"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "b10c35a6-3001-46a2-b80f-d07545e44bde",
+      "kwargs": {
+        "column": "actor_code"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "b7785857-c43e-43a1-ba14-efb119005db5",
+      "kwargs": {
+        "column": "actor_code"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "b130a60e-85c4-4bbd-8ff4-b9462006d2af",
+      "kwargs": {
+        "column": "valid"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "557e1c10-3883-4a19-977f-b2c61bfd8ad9",
+      "kwargs": {
+        "column": "valid"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "0b933733-0cea-4635-a99e-a67f4aece07d",
+      "kwargs": {
+        "column": "filename"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_unique"
+    },
+    {
+      "id": "fabb58ea-9f2d-4697-bb4f-331a10115f20",
+      "kwargs": {
+        "column": "relative_path"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_unique"
+    },
+    {
+      "id": "e867a648-d5c8-4b9f-a1a3-bdd1616621a8",
+      "kwargs": {
+        "column_list": [
+          "actor_code",
+          "statement",
+          "emotion",
+          "intensity",
+          "repetition"
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_compound_columns_to_be_unique"
+    },
+    {
+      "id": "4fda4826-69df-49ba-ba78-04a3fd91671b",
+      "kwargs": {
+        "column": "emotion",
+        "value_set": [
+          "neutral",
+          "calm",
+          "happy",
+          "sad",
+          "angry",
+          "fearful",
+          "disgust",
+          "surprised"
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "cc751ced-91d4-487c-b2b1-fde06cf49e09",
+      "kwargs": {
+        "column": "emotion_code",
+        "value_set": [
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+          "07",
+          "08",
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "6fc1f125-c783-4410-bb18-4a017c3e7cee",
+      "kwargs": {
+        "column": "intensity",
+        "value_set": [
+          "normal",
+          "strong"
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "e392a7f8-4678-4459-8d28-6a6b3b6a1726",
+      "kwargs": {
+        "column": "intensity_code",
+        "value_set": [
+          "01",
+          "02",
+          1,
+          2
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "b65bbf87-0baf-4bc6-8071-1730c47f5722",
+      "kwargs": {
+        "column": "statement",
+        "value_set": [
+          "Kids are talking by the door",
+          "Dogs are sitting by the door"
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "a547b420-98c2-43c6-9b5f-8ca6bebf9d11",
+      "kwargs": {
+        "column": "statement_code",
+        "value_set": [
+          "01",
+          "02",
+          1,
+          2
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "5de9e956-4eaa-4c70-be18-8ca636b3e712",
+      "kwargs": {
+        "column": "repetition",
+        "value_set": [
+          "01",
+          "02",
+          1,
+          2
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "f4ce7497-9e1c-47f6-9b22-92b85d9009d0",
+      "kwargs": {
+        "column": "modality",
+        "value_set": [
+          "03",
+          3
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "130b0d6b-f270-45f6-a64c-860f4d425bb9",
+      "kwargs": {
+        "column": "vocal_channel",
+        "value_set": [
+          "01",
+          1
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "3b974da3-1d01-4af6-a8c2-e7b773b17887",
+      "kwargs": {
+        "column": "actor_code",
+        "max_value": 24.0,
+        "min_value": 1.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "2a8cb7b0-2f92-48ea-8cb3-3b007b1edb2c",
+      "kwargs": {
+        "column": "actor",
+        "regex": "^Actor_\\d{2}$"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_match_regex"
+    },
+    {
+      "id": "3cc64356-845e-4d74-8591-9d4f221f5db3",
+      "kwargs": {
+        "column": "valid",
+        "value_set": [
+          true,
+          false
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "0a1d5f48-cedd-4395-b38c-1e774579e56c",
+      "kwargs": {
+        "column_A": "emotion",
+        "column_B": "emotion_code",
+        "value_pairs_set": [
+          [
+            "neutral",
+            "01"
+          ],
+          [
+            "neutral",
+            1
+          ],
+          [
+            "calm",
+            "02"
+          ],
+          [
+            "calm",
+            2
+          ],
+          [
+            "happy",
+            "03"
+          ],
+          [
+            "happy",
+            3
+          ],
+          [
+            "sad",
+            "04"
+          ],
+          [
+            "sad",
+            4
+          ],
+          [
+            "angry",
+            "05"
+          ],
+          [
+            "angry",
+            5
+          ],
+          [
+            "fearful",
+            "06"
+          ],
+          [
+            "fearful",
+            6
+          ],
+          [
+            "disgust",
+            "07"
+          ],
+          [
+            "disgust",
+            7
+          ],
+          [
+            "surprised",
+            "08"
+          ],
+          [
+            "surprised",
+            8
+          ]
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_pair_values_to_be_in_set"
+    },
+    {
+      "id": "ccaf9900-0ace-4dff-af09-cf2ed8c295c9",
+      "kwargs": {
+        "column_A": "intensity",
+        "column_B": "intensity_code",
+        "value_pairs_set": [
+          [
+            "normal",
+            "01"
+          ],
+          [
+            "normal",
+            1
+          ],
+          [
+            "strong",
+            "02"
+          ],
+          [
+            "strong",
+            2
+          ]
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_pair_values_to_be_in_set"
+    },
+    {
+      "id": "bccc5e9c-9981-4996-b0cf-6b04ef5c8570",
+      "kwargs": {
+        "column_A": "statement",
+        "column_B": "statement_code",
+        "value_pairs_set": [
+          [
+            "Kids are talking by the door",
+            "01"
+          ],
+          [
+            "Kids are talking by the door",
+            1
+          ],
+          [
+            "Dogs are sitting by the door",
+            "02"
+          ],
+          [
+            "Dogs are sitting by the door",
+            2
+          ]
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_pair_values_to_be_in_set"
+    },
+    {
+      "id": "a7e333fd-4eaf-4d39-bdbe-8bbd1c796700",
+      "kwargs": {
+        "column_A": "actor",
+        "column_B": "actor_code",
+        "value_pairs_set": [
+          [
+            "Actor_01",
+            1
+          ],
+          [
+            "Actor_02",
+            2
+          ],
+          [
+            "Actor_03",
+            3
+          ],
+          [
+            "Actor_04",
+            4
+          ],
+          [
+            "Actor_05",
+            5
+          ],
+          [
+            "Actor_06",
+            6
+          ],
+          [
+            "Actor_07",
+            7
+          ],
+          [
+            "Actor_08",
+            8
+          ],
+          [
+            "Actor_09",
+            9
+          ],
+          [
+            "Actor_10",
+            10
+          ],
+          [
+            "Actor_11",
+            11
+          ],
+          [
+            "Actor_12",
+            12
+          ],
+          [
+            "Actor_13",
+            13
+          ],
+          [
+            "Actor_14",
+            14
+          ],
+          [
+            "Actor_15",
+            15
+          ],
+          [
+            "Actor_16",
+            16
+          ],
+          [
+            "Actor_17",
+            17
+          ],
+          [
+            "Actor_18",
+            18
+          ],
+          [
+            "Actor_19",
+            19
+          ],
+          [
+            "Actor_20",
+            20
+          ],
+          [
+            "Actor_21",
+            21
+          ],
+          [
+            "Actor_22",
+            22
+          ],
+          [
+            "Actor_23",
+            23
+          ],
+          [
+            "Actor_24",
+            24
+          ],
+          [
+            "Actor_01",
+            "01"
+          ],
+          [
+            "Actor_02",
+            "02"
+          ],
+          [
+            "Actor_03",
+            "03"
+          ],
+          [
+            "Actor_04",
+            "04"
+          ],
+          [
+            "Actor_05",
+            "05"
+          ],
+          [
+            "Actor_06",
+            "06"
+          ],
+          [
+            "Actor_07",
+            "07"
+          ],
+          [
+            "Actor_08",
+            "08"
+          ],
+          [
+            "Actor_09",
+            "09"
+          ],
+          [
+            "Actor_10",
+            "10"
+          ],
+          [
+            "Actor_11",
+            "11"
+          ],
+          [
+            "Actor_12",
+            "12"
+          ],
+          [
+            "Actor_13",
+            "13"
+          ],
+          [
+            "Actor_14",
+            "14"
+          ],
+          [
+            "Actor_15",
+            "15"
+          ],
+          [
+            "Actor_16",
+            "16"
+          ],
+          [
+            "Actor_17",
+            "17"
+          ],
+          [
+            "Actor_18",
+            "18"
+          ],
+          [
+            "Actor_19",
+            "19"
+          ],
+          [
+            "Actor_20",
+            "20"
+          ],
+          [
+            "Actor_21",
+            "21"
+          ],
+          [
+            "Actor_22",
+            "22"
+          ],
+          [
+            "Actor_23",
+            "23"
+          ],
+          [
+            "Actor_24",
+            "24"
+          ]
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_pair_values_to_be_in_set"
+    },
+    {
+      "id": "f7337f63-1849-415c-8763-cfdd40b39b94",
+      "kwargs": {
+        "column": "filename",
+        "regex": ".+\\.wav$"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_match_regex"
+    },
+    {
+      "id": "48319fce-257c-421f-98fe-77d30e6ea7ef",
+      "kwargs": {
+        "column": "relative_path",
+        "regex": "^Actor_\\d{2}/.+\\.wav$"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_match_regex"
+    }
+  ],
+  "id": "f0cde80b-e597-41e2-bb41-929e22fe6d67",
+  "meta": {
+    "great_expectations_version": "1.7.1"
+  },
+  "name": "audio_metadata_validation",
+  "notes": null
+}
