@@ -130,48 +130,53 @@ async def health_check():
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     """
-    Predict emotion from uploaded audio file.
+    Predict emotion from uploaded audio file using the trained CNN model.
     """
     try:
-        # Verificar tipo de archivo
         if not file.filename.endswith(".wav"):
             raise HTTPException(status_code=400, detail="Only .wav files are supported")
 
-        # Guardar archivo temporalmente para compatibilidad total con librosa
+        # Guardar archivo temporalmente (para compatibilidad con librosa)
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
             tmp.write(await file.read())
             tmp_path = tmp.name
 
-        # Cargar audio (más robusto)
-        audio, sr = librosa.load(tmp_path, sr=None)
+        # =============================
+        # 1️⃣ Extraer features multicanal
+        # =============================
+        features = preprocess_audio(tmp_path)  # función ya definida arriba
+        input_tensor = torch.tensor(features, dtype=torch.float32).unsqueeze(0)  # (1, 4, n_mfcc, n_frames)
 
-        # Extraer features (ejemplo simple con MFCC)
-        mfcc = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=40)
-        mfcc = (mfcc - np.mean(mfcc)) / np.std(mfcc)
-        input_tensor = torch.FloatTensor(mfcc).unsqueeze(0).unsqueeze(0)
+        # =============================
+        # 2️⃣ Inferencia con el modelo CNN
+        # =============================
+        if model is None:
+            raise HTTPException(status_code=503, detail="Model not loaded")
 
-        # Posibilidades de emoción
-        emotions = ["happy", "sad", "angry", "neutral", "surprised", "fear", "disgust"]
-
-        # 4 simulaciones de predicción
-        for i in range(4):
-            emotion = random.choice(emotions)
-            confidence = round(random.uniform(0.70, 0.99), 2)
+        with torch.no_grad():
+            outputs = model(input_tensor)
+            probs = torch.softmax(outputs, dim=1).cpu().numpy()[0]
+            pred_idx = int(np.argmax(probs))
+            confidence = float(np.max(probs))
+            emotion = EMOTIONS[pred_idx] if pred_idx < len(EMOTIONS) else "unknown"
 
         logger.info(f"Predicted emotion: {emotion} ({confidence*100:.1f}%)")
 
-        # Eliminar el archivo temporal
+        # =============================
+        # 3️⃣ Limpiar y devolver respuesta
+        # =============================
         os.remove(tmp_path)
 
         return {
             "filename": file.filename,
             "emotion": emotion,
-            "confidence": confidence
+            "confidence": round(confidence, 3)
         }
 
     except Exception as e:
         logger.error(f"Error processing audio: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/emotions")
 async def get_emotions():
